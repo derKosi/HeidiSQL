@@ -6269,7 +6269,7 @@ begin
   // Todo: include database name
   // Todo: default values
   Result := TTableColumnList.Create(True);
-  ColQuery := GetResults('SELECT * FROM '+QuoteIdent(Table.Database)+'.pragma_table_xinfo('+EscapeString(Table.Name)+')');
+  ColQuery := GetResults('SELECT * FROM pragma_table_xinfo('+EscapeString(Table.Name)+', '+EscapeString(Table.Database)+')');
   while not ColQuery.Eof do begin
     Col := TTableColumn.Create(Self);
     Result.Add(Col);
@@ -6556,7 +6556,7 @@ var
 begin
   Result := TTableKeyList.Create(True);
   ColQuery := GetResults('SELECT * '+
-    'FROM '+QuoteIdent(Table.Database)+'.pragma_table_xinfo('+EscapeString(Table.Name)+') '+
+    'FROM pragma_table_xinfo('+EscapeString(Table.Name)+', '+EscapeString(Table.Database)+') '+
     'WHERE pk!=0 ORDER BY pk');
   NewKey := nil;
   while not ColQuery.Eof do begin
@@ -6576,7 +6576,7 @@ begin
   ColQuery.Free;
 
   KeyQuery := GetResults('SELECT * '+
-    'FROM '+QuoteIdent(Table.Database)+'.pragma_index_list('+EscapeString(Table.Name)+') '+
+    'FROM pragma_index_list('+EscapeString(Table.Name)+', '+EscapeString(Table.Database)+') '+
     'WHERE origin!='+EscapeString('pk'));
   while not KeyQuery.Eof do begin
     NewKey := TTableKey.Create(Self);
@@ -6586,7 +6586,7 @@ begin
     NewKey.IndexType := IfThen(KeyQuery.Col('unique')='0', TTableKey.KEY, TTableKey.UNIQUE);
     NewKey.OldIndexType := NewKey.IndexType;
     ColQuery := GetResults('SELECT * '+
-      'FROM '+QuoteIdent(Table.Database)+'.pragma_index_info('+EscapeString(NewKey.Name)+')');
+      'FROM pragma_index_info('+EscapeString(NewKey.Name)+', '+EscapeString(Table.Database)+')');
     while not ColQuery.Eof do begin
       NewKey.Columns.Add(ColQuery.Col('name'));
       NewKey.SubParts.Add('');
@@ -6801,7 +6801,7 @@ begin
   // SQLite: query PRAGMA foreign_key_list
   Result := TForeignKeyList.Create(True);
   ForeignQuery := GetResults('SELECT * '+
-    'FROM '+QuoteIdent(Table.Database)+'.pragma_foreign_key_list('+EscapeString(Table.Name)+')');
+    'FROM pragma_foreign_key_list('+EscapeString(Table.Name)+', '+EscapeString(Table.Database)+')');
   ForeignKey := nil;
   while not ForeignQuery.Eof do begin
     if (not Assigned(ForeignKey)) or (ForeignKey.KeyName <> ForeignQuery.Col('id')) then begin
