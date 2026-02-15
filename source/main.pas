@@ -3896,8 +3896,8 @@ begin
   if MessageDialog(f_('Drop %d object(s) in database "%s"?', [ObjectList.Count, Conn.Database]), msg, mtCriticalConfirmation, [mbok,mbcancel]) = mrOk then begin
     try
       // Disable foreign key checks to avoid SQL errors
-      if Conn.Has(frForeignKeyChecksVar) then
-        Conn.Query('SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0');
+      if Conn.SqlProvider.Has(qDisableForeignKeyChecks) then
+        Conn.Query(Conn.SqlProvider.GetSql(qDisableForeignKeyChecks));
       // Compose and run DROP [TABLE|VIEW|...] queries
       Editor := ActiveObjectEditor;
       for DBObject in ObjectList do begin
@@ -3905,8 +3905,8 @@ begin
         if Assigned(Editor) and Editor.Modified and Editor.DBObject.IsSameAs(DBObject) then
           Editor.Modified := False;
       end;
-      if Conn.Has(frForeignKeyChecksVar) then
-        Conn.Query('SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS');
+      if Conn.SqlProvider.Has(qEnableForeignKeyChecks) then
+        Conn.Query(Conn.SqlProvider.GetSql(qEnableForeignKeyChecks));
       // Refresh ListTables + dbtree so the dropped tables are gone:
       Conn.ClearDbObjects(ActiveDatabase);
       RefreshTree;

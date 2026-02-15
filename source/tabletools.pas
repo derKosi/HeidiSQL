@@ -2277,8 +2277,8 @@ begin
   if ToolMode <> tmGenerateData then
     Exit;
   Conn := MainForm.ActiveConnection;
-  if Conn.Has(frForeignKeyChecksVar) then
-    Conn.Query('SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0');
+  if Conn.SqlProvider.Has(qDisableForeignKeyChecks) then
+    Conn.Query(Conn.SqlProvider.GetSql(qDisableForeignKeyChecks));
 end;
 
 
@@ -2290,8 +2290,8 @@ begin
   if ToolMode <> tmGenerateData then
     Exit;
   Conn := MainForm.ActiveConnection;
-  if Conn.Has(frForeignKeyChecksVar) then
-    Conn.Query('SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1)');
+  if Conn.SqlProvider.Has(qEnableForeignKeyChecks) then
+    Conn.Query(Conn.SqlProvider.GetSql(qEnableForeignKeyChecks));
 end;
 
 

@@ -258,8 +258,16 @@ begin
       'SHOW OPEN TABLES FROM %s WHERE in_use!=0',
       ''
       );
-    qDisableForeignKeyChecks: Result := 'SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0';
-    qEnableForeignKeyChecks: Result := 'SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1)';
+    qDisableForeignKeyChecks: Result := IfThen(
+      FServerVersion >= 40014,
+      'SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0',
+      ''
+      );
+    qEnableForeignKeyChecks: Result := IfThen(
+      FServerVersion >= 40014,
+      'SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1)',
+      ''
+      );
     qOrderAsc: Result := 'ASC';
     qOrderDesc: Result := 'DESC';
     qForeignKeyDrop: Result := 'DROP FOREIGN KEY %s';

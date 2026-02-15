@@ -420,7 +420,7 @@ type
   TFeatureOrRequirement = (frSrid, frTimezoneVar, frTemporalTypesFraction, frKillQuery,
     frLockedTables, frShowCreateTrigger, frShowWarnings, frShowCollation, frShowCollationExtended,
     frShowCharset, frIntegerDisplayWidth, frShowFunctionStatus, frShowProcedureStatus,
-    frShowTriggers, frShowEvents, frColumnDefaultParentheses, frForeignKeyChecksVar,
+    frShowTriggers, frShowEvents, frColumnDefaultParentheses,
     frHelpKeyword, frEditVariables, frCreateView, frCreateProcedure, frCreateFunction,
     frCreateTrigger, frCreateEvent, frInvisibleColumns, frCompressedColumns);
 
@@ -6742,7 +6742,6 @@ begin
         frShowTriggers: Result := (not FParameters.IsProxySQLAdmin) and (ServerVersionInt >= 50010);
         frShowEvents: Result := (not Parameters.IsProxySQLAdmin) and (ServerVersionInt >= 50100);
         frColumnDefaultParentheses: Result := FParameters.IsMySQL(True) and (ServerVersionInt >= 80013);
-        frForeignKeyChecksVar: Result := ServerVersionInt >= 40014;
         frHelpKeyword: Result := (not FParameters.IsProxySQLAdmin) and (ServerVersionInt >= 40100);
         frEditVariables: Result := ServerVersionInt >= 40003;
         frCreateView: Result := ServerVersionInt >= 50001;
