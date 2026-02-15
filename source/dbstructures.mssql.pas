@@ -470,6 +470,7 @@ begin
     qDisableForeignKeyChecks: Result := '';
     qEnableForeignKeyChecks: Result := '';
     qForeignKeyDrop: Result := 'DROP FOREIGN KEY %s';
+    qGetTableColumns: Result := '';
     else Result := inherited;
   end;
 end;
